@@ -5,8 +5,6 @@ import { FaEye, FaFire, FaShoppingCart, FaStar } from "react-icons/fa";
 const ProductCard = ({ product }) => {
   const { _id, title, image, price, ratings, reviews, sold, discount } =
     product;
-  console.log(_id);
-  console.log(product);
 
   const finalPrice = discount
     ? Math.round(price - (price * discount) / 100)
@@ -25,8 +23,9 @@ const ProductCard = ({ product }) => {
       <div className="relative h-56 w-full overflow-hidden bg-gray-50">
         <Image
           src={image}
+          height={224}
+          width={500}
           alt={title}
-          fill
           className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
       </div>

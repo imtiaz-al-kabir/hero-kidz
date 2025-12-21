@@ -15,5 +15,5 @@ export const getSingleProduct = async (id) => {
   const query = { _id: new ObjectId(id) };
   const products = await connectDB(collections.PRODUCTS).findOne(query);
 
-  return products || {};
+  return {...products,_id:products._id.toString()} || {};
 };

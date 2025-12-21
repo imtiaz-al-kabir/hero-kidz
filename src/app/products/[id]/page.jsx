@@ -2,12 +2,12 @@ import Image from "next/image";
 import {
   FaChevronRight,
   FaShieldAlt,
-  FaShoppingCart,
   FaStar,
   FaTruck,
   FaWhatsapp,
 } from "react-icons/fa";
 import { getSingleProduct } from "../../../actions/server/product";
+import CartButton from "../../../components/buttons/CartButton";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -21,7 +21,9 @@ export async function generateMetadata({ params }) {
 
   return {
     title: `${product.title} | Hero Kidz`,
-    description: product.description?.slice(0, 160) || "Explore this amazing product at Hero Kidz!",
+    description:
+      product.description?.slice(0, 160) ||
+      "Explore this amazing product at Hero Kidz!",
     openGraph: {
       title: product.title,
       description: product.description?.slice(0, 160),
@@ -40,7 +42,7 @@ export default async function ProductDetails({ params }) {
   const { id } = await params;
 
   const product = await getSingleProduct(id);
-  console.log(product);
+
   if (!product) throw new Error("Product not found");
   const finalPrice = Math.round(
     product.price - (product.price * product.discount) / 100
@@ -66,9 +68,10 @@ export default async function ProductDetails({ params }) {
             <Image
               src={product.image}
               alt={product.title}
-              fill
-              className="object-contain p-4"
-              priority
+              height={700}
+              width={950}
+              className="object-contain  p-4"
+             
             />
           </div>
         </div>
@@ -132,9 +135,7 @@ export default async function ProductDetails({ params }) {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-            <button className="flex-[2] btn btn-primary btn-lg rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 normal-case">
-              <FaShoppingCart /> Add to Cart
-            </button>
+            <CartButton product={product} />
             <button className="flex-1 btn btn-outline btn-success btn-lg rounded-xl normal-case">
               <FaWhatsapp /> Order via WhatsApp
             </button>
