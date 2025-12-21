@@ -1,16 +1,47 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaEnvelope, FaGoogle, FaLock } from "react-icons/fa";
-
 const Login = () => {
+  const router = useRouter();
+  const [form, setForm] = useState({ email: "", password: "" });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const result = await signIn("credentials", {
+      email: form.email,
+      password: form.password,
+      redirect: false,
+    });
+
+    if (!result.ok) {
+      alert("email password dont match");
+    } else {
+      alert("welcome ");
+      router.push("/");
+    }
+    // const result = await postUser(form);
+    // if (result.acknowledged) {
+    //   alert("please login");
+    //   router.push("/login");
+    // }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
       <div className="card w-full max-w-md shadow-xl bg-base-100">
         <div className="card-body">
           <h2 className="text-2xl font-bold text-center">Login</h2>
 
-          <form className="space-y-4 mt-4">
+          <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             {/* Email */}
             <div className="form-control">
               <label className="label">
@@ -18,7 +49,12 @@ const Login = () => {
               </label>
               <label className="input input-bordered flex items-center gap-2">
                 <FaEnvelope />
-                <input type="email" placeholder="email@example.com" />
+                <input
+                  name="email"
+                  onChange={handleChange}
+                  type="email"
+                  placeholder="email@example.com"
+                />
               </label>
             </div>
 
@@ -29,7 +65,12 @@ const Login = () => {
               </label>
               <label className="input input-bordered flex items-center gap-2">
                 <FaLock />
-                <input type="password" placeholder="••••••••" />
+                <input
+                  name="password"
+                  onChange={handleChange}
+                  type="password"
+                  placeholder="••••••••"
+                />
               </label>
             </div>
 

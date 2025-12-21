@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import Footer from "../components/layouts/Footer";
 import Navbar from "../components/layouts/Navbar";
+import NextAuthProvider from "../provider/NextAuthProvider";
 import "./globals.css";
 const poppins = {
   weight: ["100", "200", "400", "500", "600", "800"],
@@ -17,7 +18,13 @@ export const metadata = {
   },
   description:
     "Shop the best toys, clothing, and accessories for kids at Hero Kidz. Premium quality, fast delivery across Bangladesh.",
-  keywords: ["kids store", "toys", "baby clothes", "online shopping bd", "hero kidz"],
+  keywords: [
+    "kids store",
+    "toys",
+    "baby clothes",
+    "online shopping bd",
+    "hero kidz",
+  ],
   openGraph: {
     title: "Hero Kidz | Best Online Kids Store",
     description:
@@ -41,19 +48,21 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${poppins.className} antialiased`}>
-        <header className="py-2 md:w-11/12 mx-auto">
-          <Navbar />
-        </header>
+    <NextAuthProvider>
+      <html lang="en">
+        <body className={`${poppins.className} antialiased`}>
+          <header className="py-2 md:w-11/12 mx-auto">
+            <Navbar />
+          </header>
 
-        <main className="py-2 w-full md:w-11/12 mx-auto min-h-[calc(100vh-303px)]">
-          {children}
-        </main>
-        <footer>
-          <Footer />
-        </footer>
-      </body>
-    </html>
+          <main className="py-2 w-full md:w-11/12 mx-auto min-h-[calc(100vh-303px)]">
+            {children}
+          </main>
+          <footer>
+            <Footer />
+          </footer>
+        </body>
+      </html>
+    </NextAuthProvider>
   );
 }
