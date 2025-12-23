@@ -1,13 +1,18 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { postUser } from "../../actions/server/auth";
 
 const Register = () => {
   const router = useRouter();
+  const params = useSearchParams();
+
+  const callbackUrl = params.get("callbackUrl") || "/";
+
   const [form, setForm] = useState({ name: "", email: "", password: "" });
 
   const handleChange = (e) => {
@@ -21,7 +26,12 @@ const Register = () => {
     const result = await postUser(form);
     if (result.acknowledged) {
       alert("please login");
-      router.push("/login");
+      // router.push("/login");
+      const result =await signIn("credentials", {
+        email: form.email,
+        password: form.password,
+        callbackUrl: callbackUrl,
+      });
     }
   };
   return (

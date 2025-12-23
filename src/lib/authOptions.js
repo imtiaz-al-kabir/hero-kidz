@@ -1,6 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { loginUser } from "../actions/server/auth";
-
+import { collections, connectDB } from "./dbConnect";
 export const authOptions = {
   // Configure one or more authentication providers
   providers: [
@@ -18,9 +19,58 @@ export const authOptions = {
       },
     }),
 
-     GoogleProvider({
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET
-  })
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      const isExist = await connectDB(collections.USERS).findOne({
+        email: user.email,
+        // provider: account?.provider,
+      });
+      if (isExist) {
+        return true;
+      }
+
+      const newuser = {
+        provider: "google",
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        role: "user",
+      };
+
+      const result = await connectDB(collections.USERS).insertOne(newuser);
+      return result.acknowledged;
+    },
+    // async redirect({ url, baseUrl }) {
+    //   return baseUrl
+    // },
+    async session({ session, token, user }) {
+      if (token) {
+        session.role = token?.role;
+        session.email = token?.email;
+      }
+      return session;
+    },
+    async jwt({ token, user, account, profile, isNewUser }) {
+      if (user) {
+        if (account.provider == "google") {
+          const dbUser = connectDB(collections.USERS).findOne({
+            email: user.email,
+          });
+
+          token.role = dbUser?.role;
+          token.email = dbUser?.email;
+        } else {
+          token.role = user?.role;
+          token.email = user?.email;
+        }
+      }
+      return token;
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 };

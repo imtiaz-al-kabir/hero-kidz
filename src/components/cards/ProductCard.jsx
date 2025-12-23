@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaEye, FaFire, FaShoppingCart, FaStar } from "react-icons/fa";
+import { FaEye, FaFire, FaStar } from "react-icons/fa";
+import CartButton from "../buttons/CartButton";
 
 const ProductCard = ({ product }) => {
   const { _id, title, image, price, ratings, reviews, sold, discount } =
@@ -67,10 +68,7 @@ const ProductCard = ({ product }) => {
             View Details
           </Link>
 
-          <button className="flex-1 btn btn-primary btn-sm rounded-lg flex items-center gap-2 normal-case font-semibold shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30">
-            <FaShoppingCart />
-            Add to Cart
-          </button>
+          <CartButton product={{ ...product, _id: _id.toString() }} />
         </div>
       </div>
     </div>

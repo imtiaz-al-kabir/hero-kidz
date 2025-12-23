@@ -2,11 +2,14 @@
 
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { FaEnvelope, FaGoogle, FaLock } from "react-icons/fa";
+import { FaEnvelope, FaLock } from "react-icons/fa";
+import SocialButton from "./SocialButton";
 const Login = () => {
   const router = useRouter();
+  const params=useSearchParams()
+  const callbackUrl=params.get("callbackUrl")||"/"
   const [form, setForm] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
@@ -26,13 +29,9 @@ const Login = () => {
       alert("email password dont match");
     } else {
       alert("welcome ");
-      router.push("/");
+      router.push(callbackUrl);
     }
-    // const result = await postUser(form);
-    // if (result.acknowledged) {
-    //   alert("please login");
-    //   router.push("/login");
-    // }
+  
   };
 
   return (
@@ -80,10 +79,7 @@ const Login = () => {
           <div className="divider">OR</div>
 
           {/* Google Login */}
-          <button className="btn btn-outline w-full flex items-center gap-2">
-            <FaGoogle className="text-red-500" />
-            Continue with Google
-          </button>
+          <SocialButton />
 
           <p className="text-center text-sm mt-4">
             Don’t have an account?
