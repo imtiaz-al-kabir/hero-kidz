@@ -61,7 +61,7 @@ Follow these steps to run the project locally:
     ```
 
 5.  **Open in Browser:**
-    Navigate to [http://localhost:3000](http://localhost:3000) to view the application.
+    Navigate to [https://kid-zone-one.vercel.app](https://kid-zone-one.vercel.app) to view the application.
 
 ## 📂 Project Structure
 
