@@ -8,30 +8,35 @@ import { collections, connectDB } from "../../lib/dbConnect";
 
 const cartCollection = connectDB(collections.CART);
 
-export const handleCart = async ({ product, inc = true }) => {
+export const handleCart = async (productId) => {
   const { user } = (await getServerSession(authOptions)) || {};
   if (!user) return { success: false };
 
   //   getcart item=> user.email,&& productId
 
-  const query = { email: user?.email, productId: product?._id };
+  const query = { email: user?.email, productId};
   const isAdded = await cartCollection.findOne(query);
   if (isAdded) {
     const updatedData = {
       $inc: {
-        quantity: inc ? 1 : -1,
+        quantity:1,
       },
     };
     const result = await cartCollection.updateOne(query, updatedData);
     return { success: Boolean(result.modifiedCount) };
   } else {
+
+    const product=await connectDB(collections.PRODUCTS).findOne({
+
+      _id:new ObjectId(productId)
+    })
     const newData = {
       productId: product?._id,
       email: user?.email,
       title: product.title,
       quantity: 1,
       image: product.image,
-      price: product.price - (product.price * product.discount) / 100,
+      price: product.price - (product.price * (product.discount || 0)) / 100,
       username: user?.name,
     };
     const result = await cartCollection.insertOne(newData);
@@ -59,7 +64,7 @@ export const deleteCart = async (id) => {
     return { success: false };
   }
 
-  const query = { _id: new ObjectId(id) };
+  const query = { _id: new ObjectId(id),email:user?.email };
 
   const result = await cartCollection.deleteOne(query);
   // if (result.deletedCount) {
@@ -75,7 +80,7 @@ export const increaseitemDB = async (id, quantity) => {
   if (quantity > 10) {
     return { success: false, message: "You can not buy 10 products at a time" };
   }
-  const query = { _id: new ObjectId(id) };
+  const query = { _id: new ObjectId(id),email:user?.email };
   const updatedData = {
     $inc: {
       quantity: 1,
@@ -93,7 +98,7 @@ export const decreaseitemDB = async (id, quantity) => {
   if (quantity <= 1) {
     return { success: false, message: "quantity cant be empty" };
   }
-  const query = { _id: new ObjectId(id) };
+  const query = { _id: new ObjectId(id),email:user?.email };
   const updatedData = {
     $inc: {
       quantity: -1,
@@ -103,4 +108,13 @@ export const decreaseitemDB = async (id, quantity) => {
   const result = await cartCollection.updateOne(query, updatedData);
 
   return { success: Boolean(result.modifiedCount) };
+};
+
+export const clearCart = async () => {
+  const { user } = (await getServerSession(authOptions)) || {};
+  if (!user) return { success: false };
+  const query = { email: user?.email };
+
+  const result = await cartCollection.deleteMany(query);
+  return result;
 };

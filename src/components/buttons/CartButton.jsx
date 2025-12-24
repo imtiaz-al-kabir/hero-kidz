@@ -4,23 +4,37 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { useCart } from "../../provider/CartProvider";
 import { handleCart } from "../../actions/server/cart";
 
 const CartButton = ({ product }) => {
   const router = useRouter();
   const path = usePathname();
   const session = useSession();
+  const { refreshCart } = useCart();
   const [loading, setLoading] = useState(false);
   const isLogin = session?.status == "authenticated";
   const add2Cart = async () => {
     if (isLogin) {
       setLoading(true);
-      const result = await handleCart({ product, inc: true });
+      const result = await handleCart(product._id);
 
       if (result.success) {
-        alert("Added to Cart", product?.title, "success");
+        refreshCart();
+        Swal.fire({
+          title: "Added to Cart!",
+          text: `${product?.title} has been added to your cart.`,
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       } else {
-        alert("something went wrong");
+        Swal.fire({
+          title: "Error!",
+          text: "Something went wrong. Please try again.",
+          icon: "error",
+        });
       }
       setLoading(false);
     } else {
@@ -32,9 +46,9 @@ const CartButton = ({ product }) => {
     <button
       disabled={session?.status == "loading" || loading}
       onClick={add2Cart}
-      className="flex-2 btn btn-primary btn-lg rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 normal-case"
+      className="btn btn-primary btn-sm h-12 rounded-xl normal-case font-bold text-sm gap-2 px-6 shadow-premium hover:shadow-premium-lg transition-all duration-300 hover:scale-105 disabled:hover:scale-100"
     >
-      <FaShoppingCart /> Add to Cart
+      <FaShoppingCart size={16} /> Add to Cart
     </button>
   );
 };

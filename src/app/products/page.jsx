@@ -1,9 +1,9 @@
 import Products from "../../components/home/Products";
 
 export const metadata = {
-  title: "All Products",
+  title: "Kidz Zone | Products",
   description:
-    "Explore our exclusive collection of kids' products. From trendy clothing to fun toys, find everything your little hero needs at Hero Kidz.",
+    "Explore our exclusive collection of kids' products. From trendy clothing to fun toys, find everything your little hero needs at Kidz Zone.",
   keywords: [
     "kids store",
     "children clothing",
@@ -30,7 +30,7 @@ export const metadata = {
 
 const ProductPage = () => {
   return (
-    <div>
+    <div className="w-full">
       <Products />
     </div>
   );

@@ -1,74 +1,67 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaEye, FaFire, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import CartButton from "../buttons/CartButton";
 
 const ProductCard = ({ product }) => {
-  const { _id, title, image, price, ratings, reviews, sold, discount } =
-    product;
+  const { _id, title, image, price, ratings, discount } = product;
 
   const finalPrice = discount
     ? Math.round(price - (price * discount) / 100)
     : price;
 
   return (
-    <div className="group relative bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
-      {/* Badge: Discount */}
-      {discount > 0 && (
-        <div className="absolute top-3 left-3 z-10 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
-          {discount}% OFF
-        </div>
-      )}
+    <div className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-gray-200 transition-all duration-300 flex flex-col h-full">
+      {/* Image Container */}
+      <div className="relative aspect-square bg-gray-50 overflow-hidden p-4">
+        {/* Discount Badge */}
+        {discount > 0 && (
+          <span className="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full z-20 shadow-sm">
+            -{discount}%
+          </span>
+        )}
 
-      {/* Image Section */}
-      <div className="relative h-56 w-full overflow-hidden bg-gray-50">
-        <Image
-          src={image}
-          height={224}
-          width={500}
-          alt={title}
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+        {/* Product Image */}
+        <Link href={`/products/${_id}`} className="block w-full h-full relative z-10">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </Link>
       </div>
 
-      {/* Content Section */}
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-1">
-          <div className="flex items-center gap-1 text-[10px] font-medium text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md">
-            <FaFire size={10} />
-            <span>{sold} SOLD</span>
+      {/* Info Container */}
+      <div className="p-5 flex flex-col flex-1 gap-3">
+        {/* Title & Rating */}
+        <div>
+          <div className="flex items-center gap-1 mb-1">
+            <FaStar className="text-amber-400 text-xs" />
+            <span className="text-xs text-gray-500 font-medium">{ratings}</span>
           </div>
-          <div className="flex items-center gap-1 text-xs font-semibold text-gray-600">
-            <FaStar className="text-warning" />
-            <span>{ratings}</span>
-            <span className="text-gray-300 ml-1">({reviews})</span>
-          </div>
-        </div>
 
-        <h2 className="text-gray-800 font-medium text-sm h-10 line-clamp-2 mb-2 group-hover:text-primary transition-colors cursor-pointer">
-          {title}
-        </h2>
-
-        <div className="flex items-baseline gap-2 mb-4">
-          <span className="text-xl font-bold text-gray-900">৳{finalPrice}</span>
-          {discount > 0 && (
-            <span className="text-sm line-through text-gray-400 font-light">
-              ৳{price}
-            </span>
-          )}
-        </div>
-
-        {/* Updated Action Buttons Group */}
-        <div className="flex gap-2">
-          <Link
-            href={`/products/${_id}`}
-            className="flex-1 btn btn-outline btn-primary btn-sm rounded-lg flex items-center gap-2 normal-case font-semibold"
-          >
-            <FaEye />
-            View Details
+          <Link href={`/products/${_id}`} className="group-hover:text-primary transition-colors">
+            <h3 className="text-base font-semibold text-gray-800 leading-snug line-clamp-2">
+              {title}
+            </h3>
           </Link>
+        </div>
 
-          <CartButton product={{ ...product, _id: _id.toString() }} />
+        {/* Price & Action */}
+        <div className="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-lg font-bold text-gray-900">৳{finalPrice}</span>
+            {discount > 0 && (
+              <span className="text-xs text-gray-400 line-through font-medium">৳{price}</span>
+            )}
+          </div>
+
+          {/* Action Button */}
+          <div className="transform md:translate-x-2 md:opacity-80 md:group-hover:translate-x-0 md:group-hover:opacity-100 transition-all duration-200">
+            <CartButton product={{ ...product, _id: _id.toString() }} minimal={true} />
+          </div>
         </div>
       </div>
     </div>

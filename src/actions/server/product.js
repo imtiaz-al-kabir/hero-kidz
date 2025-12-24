@@ -4,7 +4,11 @@ import { ObjectId } from "mongodb";
 
 export const getProducts = async () => {
   const products = await connectDB(collections.PRODUCTS).find().toArray();
-  return products;
+  // Serialization Fix: Convert _id to string and ensure plain object
+  return products.map(product => ({
+    ...product,
+    _id: product._id.toString(),
+  }));
 };
 
 export const getSingleProduct = async (id) => {
@@ -13,7 +17,9 @@ export const getSingleProduct = async (id) => {
   }
 
   const query = { _id: new ObjectId(id) };
-  const products = await connectDB(collections.PRODUCTS).findOne(query);
+  const product = await connectDB(collections.PRODUCTS).findOne(query);
 
-  return {...products,_id:products._id.toString()} || {};
+  if (!product) return {};
+
+  return { ...product, _id: product._id.toString() };
 };

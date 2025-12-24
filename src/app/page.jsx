@@ -1,25 +1,23 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../lib/authOptions";
 import Banner from "../components/home/Banner";
+import Categories from "../components/home/Categories";
+import Features from "../components/home/Features";
+import Newsletter from "../components/home/Newsletter";
 import Products from "../components/home/Products";
 
 export const metadata = {
-  title: "Home | Hero Kidz",
+  title: "Home | Kidz Zone",
   description:
-    "Welcome to Hero Kidz, your one-stop destination for premium kids' products. Explore our latest collection today!",
+    "Welcome to Kidz Zone, your one-stop destination for premium kids' products. Explore our latest collection today!",
 };
 
 const Home = async () => {
-  const session = await getServerSession(authOptions);
   return (
-    <div className="">
-      <p>{JSON.stringify(session)}</p>
-      <section>
-        <Banner />
-      </section>
-      <section>
-        <Products />
-      </section>
+    <div className="overflow-hidden">
+      <Banner />
+      <Features />
+      <Categories />
+      <Products />
+      <Newsletter />
     </div>
   );
 };

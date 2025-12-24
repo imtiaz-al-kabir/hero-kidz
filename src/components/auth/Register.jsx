@@ -10,10 +10,10 @@ import { postUser } from "../../actions/server/auth";
 const Register = () => {
   const router = useRouter();
   const params = useSearchParams();
-
   const callbackUrl = params.get("callbackUrl") || "/";
 
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,87 +21,122 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    setLoading(true);
 
-    const result = await postUser(form);
-    if (result.acknowledged) {
-      alert("please login");
-      // router.push("/login");
-      const result =await signIn("credentials", {
-        email: form.email,
-        password: form.password,
-        callbackUrl: callbackUrl,
-      });
+    try {
+      const result = await postUser(form);
+      if (result.acknowledged) {
+        // Auto sign-in after registration
+        const signInResult = await signIn("credentials", {
+          email: form.email,
+          password: form.password,
+          callbackUrl: callbackUrl,
+        });
+      }
+    } catch (error) {
+      console.error("Registration failed", error);
+    } finally {
+      setLoading(false);
     }
   };
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
-      <div className="card w-full max-w-md shadow-xl bg-base-100">
-        <div className="card-body">
-          <h2 className="text-2xl font-bold text-center">Register</h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-neutral">
+            Create an account
+          </h2>
+          <p className="mt-2 text-sm text-gray-500">
+            Join Kidz Zone for exclusive deals
+          </p>
+        </div>
+
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
             {/* Name */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Name</span>
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name
               </label>
-              <label className="input input-bordered flex items-center gap-2">
-                <FaUser />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <FaUser />
+                </div>
                 <input
+                  id="name"
                   name="name"
-                  onChange={handleChange}
                   type="text"
-                  placeholder="Your name"
+                  required
+                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-gray-50/30"
+                  placeholder="John Doe"
+                  onChange={handleChange}
                 />
-              </label>
+              </div>
             </div>
 
             {/* Email */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Email</span>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email address
               </label>
-              <label className="input input-bordered flex items-center gap-2">
-                <FaEnvelope />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <FaEnvelope />
+                </div>
                 <input
-                  type="email"
+                  id="email"
                   name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-gray-50/30"
+                  placeholder="name@example.com"
                   onChange={handleChange}
-                  placeholder="email@example.com"
                 />
-              </label>
+              </div>
             </div>
 
             {/* Password */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Password</span>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Password
               </label>
-              <label className="input input-bordered flex items-center gap-2">
-                <FaLock />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <FaLock />
+                </div>
                 <input
+                  id="password"
                   name="password"
                   type="password"
-                  onChange={handleChange}
+                  required
+                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-gray-50/30"
                   placeholder="••••••••"
+                  onChange={handleChange}
                 />
-              </label>
+              </div>
+              <p className="mt-1 text-xs text-gray-500">
+                Must be at least 8 characters
+              </p>
             </div>
+          </div>
 
-            <button className="btn btn-primary w-full">Register</button>
-          </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-primary hover:bg-primary-focus focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? "Creating account..." : "Sign up"}
+          </button>
+        </form>
 
-          <p className="text-center text-sm mt-4">
-            Already have an account?
-            <Link
-              href="/auth/login"
-              className="ml-1 text-primary font-semibold"
-            >
-              Login
-            </Link>
-          </p>
-        </div>
+        <p className="text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link href="/login" className="font-semibold text-primary hover:text-primary-focus transition-colors">
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   );

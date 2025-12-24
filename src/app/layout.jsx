@@ -1,68 +1,39 @@
-import localFont from "next/font/local";
 import Footer from "../components/layouts/Footer";
 import Navbar from "../components/layouts/Navbar";
 import NextAuthProvider from "../provider/NextAuthProvider";
+import { CartProvider } from "../provider/CartProvider";
 import "./globals.css";
-const poppins = {
-  weight: ["100", "200", "400", "500", "600", "800"],
-};
-
-export const fontBangla = localFont({
-  src: "./../fonts/mayaboti-normal.ttf",
-});
+import { outfit } from "./fonts";
 
 export const metadata = {
   title: {
-    default: "Hero Kidz | Best Online Kids Store",
-    template: "%s | Hero Kidz",
+    default: "Kidz Zone | Premium Kids Store",
+    template: "%s | Kidz Zone",
   },
-  description:
-    "Shop the best toys, clothing, and accessories for kids at Hero Kidz. Premium quality, fast delivery across Bangladesh.",
-  keywords: [
-    "kids store",
-    "toys",
-    "baby clothes",
-    "online shopping bd",
-    "hero kidz",
-  ],
-  openGraph: {
-    title: "Hero Kidz | Best Online Kids Store",
-    description:
-      "Shop the best toys, clothing, and accessories for kids at Hero Kidz. Premium quality, fast delivery across Bangladesh.",
-    url: "https://herokidz.com",
-    siteName: "Hero Kidz",
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Hero Kidz | Best Online Kids Store",
-    description:
-      "Shop the best toys, clothing, and accessories for kids at Hero Kidz. Premium quality, fast delivery across Bangladesh.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  description: "Premium quality toys, clothing, and accessories for the modern child.",
+  keywords: ["kids store", "premium toys", "kidz zone", "fashion"],
 };
 
 export default function RootLayout({ children }) {
   return (
     <NextAuthProvider>
-      <html lang="en">
-        <body className={`${poppins.className} antialiased`}>
-          <header className="py-2 md:w-11/12 mx-auto">
+      <CartProvider>
+        <html lang="en" data-theme="light">
+          <body className={`${outfit.variable} antialiased bg-base-100 text-neutral font-sans overflow-x-hidden`}>
             <Navbar />
-          </header>
 
-          <main className="py-2 w-full md:w-11/12 mx-auto min-h-[calc(100vh-303px)]">
-            {children}
-          </main>
-          <footer>
-            <Footer />
-          </footer>
-        </body>
-      </html>
+            <main className="w-full min-h-[calc(100vh-350px)]">
+              {/* Removed the wrapper div here to allow full-width sections (like Hero) 
+                  while individual components will handle their own constraining */}
+              {children}
+            </main>
+
+            <footer className="w-full bg-neutral text-neutral-content">
+              <Footer />
+            </footer>
+          </body>
+        </html>
+      </CartProvider>
     </NextAuthProvider>
   );
 }

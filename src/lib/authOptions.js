@@ -58,7 +58,7 @@ export const authOptions = {
     async jwt({ token, user, account, profile, isNewUser }) {
       if (user) {
         if (account.provider == "google") {
-          const dbUser = connectDB(collections.USERS).findOne({
+          const dbUser = await connectDB(collections.USERS).findOne({
             email: user.email,
           });
 

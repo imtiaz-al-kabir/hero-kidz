@@ -15,9 +15,13 @@ const NavLink = ({ href, children }) => {
   return (
     <Link
       href={href}
-      className={`font-medium ${isActive ? "text-primary" : "text-gray-800"} hover:text-primary transition-colors`}
+      className={`font-bold text-base ${isActive ? "text-primary" : "text-gray-700"} hover:text-primary transition-all duration-300 relative group`}
     >
       {children}
+      {isActive && (
+        <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-secondary to-accent rounded-full"></span>
+      )}
+      <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-full"></span>
     </Link>
   );
 };

@@ -1,12 +1,21 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-  themes: light --default;
+  themes: light --default, dark --default;
 }
+
+@theme {
+  --font-outfit: var(--font-outfit);
+}
+
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-   --color-primary: oklch(65% 0.23 35);
+  /* Professional Brand Colors - Trustworthy & Modern */
+
+
+  /* Brand */
+  --color-primary: oklch(65% 0.23 35);
   --color-secondary: oklch(58% 0.18 30);
   --color-accent: oklch(72% 0.20 55);
 
@@ -25,3 +34,130 @@
 }
 
 @custom-variant dark (&:where([data-theme=night], [data-theme=night] *));
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-base-100);
+  font-family: var(--font-outfit), sans-serif;
+  color: var(--color-neutral);
+  line-height: 1.6;
+}
+
+/* 
+  ------------------------
+  Utility Classes
+  ------------------------ 
+*/
+
+/* Professional Glassmorphism (Subtle) */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Sophisticated Card Hover */
+.card-hover-premium {
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.card-hover-premium:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 10px 10px -5px rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Buttons */
+.btn {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  /* Remove uppercase if present */
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 6px -2px rgba(var(--color-primary), 0.3);
+}
+
+.btn-primary:hover {
+  background: lch(from var(--color-primary) calc(l - 5) c h);
+  border-color: lch(from var(--color-primary) calc(l - 5) c h);
+  box-shadow: 0 10px 15px -3px rgba(var(--color-primary), 0.4);
+}
+
+/* Subtle Gradients for Text - Use sparingly for emphasis */
+.text-gradient-premium {
+  background: linear-gradient(135deg, var(--color-primary) 0%, oklch(55% 0.2 280) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Shadows */
+.shadow-soft {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+}
+
+.shadow-medium {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Focus States */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Container padding utility to fix "too wide" feel on large screens */
+.container-padded {
+  padding-left: max(1rem, 5vw);
+  padding-right: max(1rem, 5vw);
+}
+
+/* Creative Animations */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}

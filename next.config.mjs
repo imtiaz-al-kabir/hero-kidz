@@ -12,6 +12,13 @@ const nextConfig = {
         // pathname: '/my-bucket/**',
         // search: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        // port: '',
+        // pathname: '/my-bucket/**',
+        // search: '',
+      },
     ],
   },
 };
