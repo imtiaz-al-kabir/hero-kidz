@@ -1,12 +1,15 @@
 import { getCart } from "../../actions/server/cart";
+import Cart from "../../components/home/Cart";
 
 const CartPage = async () => {
   const cartItem = await getCart();
   return (
     <div>
-      <h2>My Cart</h2>
+      <div>
+        <h2>My Cart</h2>
+      </div>
 
-      <p>{cartItem.length} items found</p>
+      <Cart cartItem={cartItem} />
     </div>
   );
 };
